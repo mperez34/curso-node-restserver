@@ -1,6 +1,9 @@
+import { Categoria } from '../models/categoria.js';
+import { Producto } from '../models/producto.js';
 import { Role } from '../models/role.js';
 import { Usuario } from "../models/usuario.js";
 
+/*Validadores de usuarios*/
 const esRoleValido = async (rol = '') => {
     const existeRol = await Role.findOne({ rol });
     if ( !existeRol ) {
@@ -29,8 +32,56 @@ const existeUsuarioPorId = async (id = '') => {
     }
 }
 
+/*Validadores de categorias*/
+const existeCategoriaPorId = async (id = '') => {
+
+    const existeCategoria = await Categoria.findById(id);
+
+    if ( !existeCategoria ) {
+        throw new Error(`El id ${id} no existe en la BD`)
+        
+    }
+
+}
+
+const existeCategoriaPorNombre = async (nombre = '') => {
+
+    const categoria = nombre.toUpperCase();
+    const existeCategoria = await Categoria.findOne({ nombre: categoria });
+
+    if ( !existeCategoria ) {
+        throw new Error(`La categoria ${categoria} no existe en la BD`)
+        
+    }
+}
+
+/*Validadores de productos*/
+
+const existeProductoPorId = async (id = '') => {
+
+    const existeProducto = await Producto.findById(id);
+
+    if (!existeProducto) {
+        throw new Error(`El id ${id} no existe en la BD`)
+    }
+}
+
+const existeProductoPorNombre = async ( nombre = '') => {
+
+    const producto = nombre.toUpperCase();
+    const existeProducto = await Producto.findOne({ nombre: producto });
+
+    if ( existeProducto ) {
+        throw new Error(`El producto ${producto} ya existe en la BD`)
+    }
+}
+
 export { 
         esRoleValido, 
         emailExiste,
-        existeUsuarioPorId 
+        existeUsuarioPorId,
+        existeCategoriaPorId,
+        existeCategoriaPorNombre,
+        existeProductoPorId,
+        existeProductoPorNombre
        };
