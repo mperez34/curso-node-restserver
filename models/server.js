@@ -4,7 +4,9 @@ import { router } from '../routes/usuarios.js';
 import { router as routerCategorias } from '../routes/categorias.js';
 import { router as routerAuth } from '../routes/auth.js';
 import { router as routerProductos } from '../routes/productos.js';
-import {router as routerBuscar} from '../routes/buscar.js';
+import { router as routerBuscar } from '../routes/buscar.js';
+import { router as rouertUploads } from '../routes/uploads.js';
+import fileUpload from 'express-fileupload';
 import { dbConnection } from '../database/config.js';
 
 class Server {
@@ -17,7 +19,8 @@ class Server {
             buscar: '/api/buscar',
             auth: '/api/auth',
             categorias: '/api/categorias',
-            productos: '/api/productos'
+            productos: '/api/productos',
+            uploads: '/api/uploads'
         }
 
         //Conectar a base de datos
@@ -41,6 +44,12 @@ class Server {
         this.app.use( express.json() );
         //Directorio público
         this.app.use( express.static('public'));
+        // Fileupload - carga de archivos
+        this.app.use( fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }));
     }
 
     routes() {
@@ -48,7 +57,8 @@ class Server {
        this.app.use(this.paths.buscar, routerBuscar);
        this.app.use(this.paths.auth, routerAuth);
        this.app.use(this.paths.categorias, routerCategorias);
-       this.app.use(this.paths.productos, routerProductos)
+       this.app.use(this.paths.productos, routerProductos);
+       this.app.use(this.paths.uploads, rouertUploads);
     }
 
     listen() {
